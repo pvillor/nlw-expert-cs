@@ -1,6 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using RocketAuction.API.Contracts;
 using RocketAuction.API.Filters;
+using RocketAuction.API.Repositories;
+using RocketAuction.API.Repositories.DataAccess;
 using RocketAuction.API.Services;
+using RocketAuction.API.UseCases.Auctions.GetCurrent;
 using RocketAuction.API.UseCases.Offers.CreateOffer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +48,16 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<AuthenticationUserAttribute>();
 builder.Services.AddScoped<LoggedUser>();
 builder.Services.AddScoped<CreateOfferUseCase>();
+builder.Services.AddScoped<GetCurrentAuctionUseCase>();
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILoggedUser, LoggedUser>();
+
+builder.Services.AddDbContext<RocketAuctionDbContext>(options =>
+{
+    options.UseSqlite(@"Data Source=C:\Users\paulo.guerra\Documents\rocketseat\nlw-expert\csharp\auctionDbNLW.db");
+});
 
 builder.Services.AddHttpContextAccessor();
 
